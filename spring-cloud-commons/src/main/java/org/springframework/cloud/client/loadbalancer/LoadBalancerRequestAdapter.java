@@ -16,24 +16,31 @@
 
 package org.springframework.cloud.client.loadbalancer;
 
-import org.springframework.web.reactive.function.client.ClientRequest;
+import org.springframework.cloud.client.ServiceInstance;
 
 /**
+ * An adapter class that allows creating {@link Request} objects from previously
+ * {@link LoadBalancerRequest} objects.
+ *
  * @author Olga Maciaszek-Sharma
  * @since 3.0.0
  */
-public class ClientRequestContext extends DefaultRequestContext {
+public class LoadBalancerRequestAdapter<T, RC> extends DefaultRequest<RC> implements LoadBalancerRequest<T> {
 
-	public ClientRequestContext(ClientRequest clientRequest) {
-		this(clientRequest, "default");
+	private final LoadBalancerRequest<T> delegate;
+
+	public LoadBalancerRequestAdapter(LoadBalancerRequest<T> delegate) {
+		this.delegate = delegate;
 	}
 
-	public ClientRequestContext(ClientRequest clientRequest, String hint) {
-		super(clientRequest, hint);
+	public LoadBalancerRequestAdapter(LoadBalancerRequest<T> delegate, RC context) {
+		super(context);
+		this.delegate = delegate;
 	}
 
-	public ClientRequest getClientRequest() {
-		return (ClientRequest) super.getClientRequest();
+	@Override
+	public T apply(ServiceInstance instance) throws Exception {
+		return delegate.apply(instance);
 	}
 
 }

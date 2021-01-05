@@ -16,23 +16,16 @@
 
 package org.springframework.cloud.client.loadbalancer;
 
-import org.springframework.http.HttpRequest;
-
 /**
+ * Allows setting and retrieving request start time.
+ *
  * @author Olga Maciaszek-Sharma
+ * @since 3.0.0
  */
-public class HttpRequestContext extends DefaultRequestContext {
+public interface TimedRequestContext {
 
-	public HttpRequestContext(HttpRequest httpRequest) {
-		this(httpRequest, "default");
-	}
+	long getRequestStartTime();
 
-	public HttpRequestContext(HttpRequest httpRequest, String hint) {
-		super(httpRequest, hint);
-	}
-
-	public HttpRequest getClientRequest() {
-		return (HttpRequest) super.getClientRequest();
-	}
+	void setRequestStartTime(long requestStartTime);
 
 }
